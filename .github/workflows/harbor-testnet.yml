@@ -12,11 +12,14 @@ jobs:
     name: Initial steps for harbor
     if: github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
     steps:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.workflow_run.head_sha }}
     
       - name: Get Commit value
@@ -29,13 +32,11 @@ jobs:
       - name: Echo tag name (sha-short)
         run: echo ${{ steps.commit.outputs.short }}
 
-      - name: Echo workflow_run details
-        run: |
-          echo ${{ github.event.workflow_run.event }}
-          echo ${{ github.event.workflow_run.conclusion }}
-          echo ${{ github.event.workflow_run.head_branch }}
-
+        
 
       
+
+
+
 
       
