@@ -257,7 +257,7 @@
         },
         {
             "name": "relayer",
-            "image": "ghcr.io/connext/relayer:sha-default",
+            "image": "ghcr.io/connext/relayer:$sha_default",
             "ports": [
                 8080
             ],
@@ -272,7 +272,7 @@
         },
         {
             "name": "sequencerPublisher",
-            "image": "ghcr.io/connext/sequencer-publisher:sha-default",
+            "image": "ghcr.io/connext/sequencer-publisher:$sha_default",
             "ports": [
                 8081
             ],
@@ -289,7 +289,7 @@
         },
         {
             "name": "sequencerSubscriber",
-            "image": "ghcr.io/connext/sequencer-subscriber:sha-default",
+            "image": "ghcr.io/connext/sequencer-subscriber:$sha_default",
             "ports": [
                 8081
             ],
@@ -334,7 +334,7 @@
         },
         {
             "name": "cartographerTransfers",
-            "image": "ghcr.io/connext/cartographer-transfers:sha-default",
+            "image": "ghcr.io/connext/cartographer-transfers:$sha_default",
             "ports": [
                 8080
             ],
@@ -349,7 +349,7 @@
         },
         {
             "name": "cartographerRouters",
-            "image": "ghcr.io/connext/cartographer-routers:sha-default",
+            "image": "ghcr.io/connext/cartographer-routers:$sha_default",
             "ports": [
                 8080
             ],
@@ -364,7 +364,7 @@
         },
         {
             "name": "routerPublisher",
-            "image": "ghcr.io/connext/router-publisher:sha-default",
+            "image": "ghcr.io/connext/router-publisher:$sha_default",
             "ports": [
                 8080
             ],
@@ -382,7 +382,7 @@
         },
         {
             "name": "routerSubscriber",
-            "image": "ghcr.io/connext/router-subscriber:sha-default",
+            "image": "ghcr.io/connext/router-subscriber:$sha_default",
             "ports": [
                 8080
             ],
@@ -400,7 +400,7 @@
         },
         {
             "name": "routerExecutor",
-            "image": "ghcr.io/connext/router-executor:sha-default",
+            "image": "ghcr.io/connext/router-executor:$sha_default",
             "ports": [
                 8080
             ],
