@@ -39,5 +39,5 @@ packages/integration/ops/config/router/*.yaml
 **/.terraform.lock.hcl
 ops/**/tfvars.json
 .idea
-packages/deployments/contracts/deployments/local_1337
-packages/deployments/contracts/deployments/local_1338
+#packages/deployments/contracts/deployments/local_1337
+#packages/deployments/contracts/deployments/local_1338
