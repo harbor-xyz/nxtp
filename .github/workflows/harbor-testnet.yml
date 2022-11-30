@@ -19,8 +19,22 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.workflow_run.head_sha }}
     
-      - name: Echo head sha7
-        run: echo sha-${{ github.event.workflow_run.head_sha7 }}
+      - name: Get Commit value
+        id: commit
+        uses: pr-mpt/actions-commit-hash@v2
+        with:
+          commit: "${{ github.event.workflow_run.head_sha }}"
+          prefix: "sha-"
+      
+      - name: Echo tag name (sha-short)
+        run: echo ${{ steps.commit.outputs.short }}
+
+      - name: Echo workflow_run details
+        run: |
+          echo ${{ github.event.workflow_run.event }}
+          echo ${{ github.event.workflow_run.conclusion }}
+          echo ${{ github.event.workflow_run.pull_requests }}
+
 
       
 
