@@ -1,0 +1,27 @@
+name: Harbor Testnet
+
+on:
+  workflow_run:
+    workflows:
+      - E2E Workflow for Connext
+    types:
+      - completed
+
+jobs:
+
+  testnet:
+    name: harbor testnet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+    
+      - name: Echo head sha7
+        run: echo sha-${{ github.event.workflow_run.head_sha7 }}
+
+      
+
+      
