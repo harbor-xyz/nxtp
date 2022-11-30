@@ -118,8 +118,8 @@ jobs:
         with:
           mode: stop
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          label: ${{ needs.start-runner.outputs.label }}
-          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
+          label: ${{ needs.init.outputs.label }}
+          ec2-instance-id: ${{ needs.init.outputs.ec2-instance-id }}
       
 
 
