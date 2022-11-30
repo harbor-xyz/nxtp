@@ -39,7 +39,7 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: start
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
           ec2-image-id: ami-02190d1f94fa1db63
           ec2-instance-type: c5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
@@ -53,7 +53,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_REGISTRATION_TOKEN }}
           ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Configure Harbor
@@ -117,7 +117,7 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: stop
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
           label: ${{ needs.start-runner.outputs.label }}
           ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
       
