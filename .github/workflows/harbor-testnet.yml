@@ -56,6 +56,11 @@ jobs:
           token: ${{ secrets.GH_REGISTRATION_TOKEN }}
           ref: ${{ github.event.workflow_run.head_sha }}
 
+      - name: Setup Nodejs and npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
       - name: Configure Harbor
         run: /root/go/bin/harbor configure keys --user-key ${{ secrets.HARBOR_USER_KEY }} --project-key ${{ secrets.HARBOR_PROJECT_KEY }}
 
