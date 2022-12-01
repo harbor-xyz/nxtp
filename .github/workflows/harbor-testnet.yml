@@ -40,7 +40,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-0b9e2e3d1200566ee
+          ec2-image-id: ami-0e49cd78368c1c49d
           ec2-instance-type: c5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
@@ -94,12 +94,12 @@ jobs:
         run: |
           echo "${{fromJson(steps.testnet-data.outputs.TDATA).name}}"
       
-      - name: run bootup.sh Subgraph 
+      - name: Build and deploy subgraph 
         run: |
           IPFS_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.ipfs.endpoints[0]}}"
           GRAPH_URL_1337="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1337.endpoints[0]}}" 
           GRAPH_URL_1338="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1338.endpoints[0]}}"
-          IPFS_URL="${IPFS_URL%%:*}" GRAPH_URL_1337="${GRAPH_URL_1337%%:*}" GRAPH_URL_1338="${GRAPH_URL_1338%%:*}" sh bootUp.sh
+          IPFS_URL="${IPFS_URL%%:*}" GRAPH_URL_1337="${GRAPH_URL_1337%%:*}" GRAPH_URL_1338="${GRAPH_URL_1338%%:*}" sh setup_subgraph.sh
 
       - name: Run Test
         run:  yarn workspace @connext/nxtp-integration run test:sample
