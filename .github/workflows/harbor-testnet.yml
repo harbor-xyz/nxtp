@@ -40,7 +40,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-02190d1f94fa1db63
+          ec2-image-id: ami-0b9e2e3d1200566ee
           ec2-instance-type: c5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
@@ -64,18 +64,17 @@ jobs:
       - name: Configure Harbor
         run: /root/go/bin/harbor configure keys --user-key ${{ secrets.HARBOR_USER_KEY }} --project-key ${{ secrets.HARBOR_PROJECT_KEY }}
 
-      - name: Initialize Harbor
-        run: /root/go/bin/harbor init
-
       - name: Compile code and other dependencies
         # run: yarn && yarn build:all
         run: yarn workspaces focus @connext/nxtp-contracts && yarn workspace @connext/nxtp-contracts build
 
       - name: Build and Run Testnet
-        run: /root/go/bin/harbor apply ${{ needs.init.outputs.short-sha }} --placeholder-map sha_default=sha-659b4b7 --no-wait true 
+        run: /root/go/bin/harbor apply ${{ needs.init.outputs.short-sha }} --placeholder-map sha_default=sha-14fd507 --no-wait true 
 
       - name: yarn && yarn build:all
-        run: yarn && yarn build:all
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=6144" 
+          yarn && yarn build:all
 
       - name: Poll until testnet running
         run: sh /root/describe.sh ${{ needs.init.outputs.short-sha }}
@@ -95,6 +94,15 @@ jobs:
       - name: Echo testnet name
         run: |
           echo "${{fromJson(steps.testnet-data.outputs.TDATA).name}}"
+      
+      - name: Set ENV 
+        run: |
+          export IPFS_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.ipfs.endpoints[0]}}"
+          export GRAPH_URL_1337="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1337.endpoints[0]}}" 
+          export GRAPH_URL_1338="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1338.endpoints[0]}}"
+
+      - name: run bootSh 
+        run: sh bootUp.sh
 
       - name: Run Test
         run:  yarn workspace @connext/nxtp-integration run test:sample
