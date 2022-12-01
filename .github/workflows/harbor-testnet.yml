@@ -95,14 +95,12 @@ jobs:
         run: |
           echo "${{fromJson(steps.testnet-data.outputs.TDATA).name}}"
       
-      - name: Set ENV 
+      - name: run bootup.sh Subgraph 
         run: |
-          export IPFS_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.ipfs.endpoints[0]}}"
-          export GRAPH_URL_1337="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1337.endpoints[0]}}" 
-          export GRAPH_URL_1338="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1338.endpoints[0]}}"
-
-      - name: run bootSh 
-        run: sh bootUp.sh
+          IPFS_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.ipfs.endpoints[0]}}"
+          GRAPH_URL_1337="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1337.endpoints[0]}}" 
+          GRAPH_URL_1338="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1338.endpoints[0]}}"
+          IPFS_URL="${IPFS_URL%%:*}" GRAPH_URL_1337="${GRAPH_URL_1337%%:*}" GRAPH_URL_1338="${GRAPH_URL_1338%%:*}" sh bootUp.sh
 
       - name: Run Test
         run:  yarn workspace @connext/nxtp-integration run test:sample
