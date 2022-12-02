@@ -1,4 +1,5 @@
 <div align="center">
+
   <!-- PROJECT LOGO -->
   <a href="https://github.com/connext/nxtp">
     <img src="https://images.squarespace-cdn.com/content/v1/619f86b8de2c6f4f7fa201c0/8eaeca35-ccf3-495f-9e9a-19fbec796187/connext__Logo+%2B+WhiteText+MultiColor.png?format=1500w" alt="Logo" width="320" height="80">
