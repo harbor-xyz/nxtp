@@ -38,7 +38,7 @@
                     "ETH_PROVIDER_URL": "http://localhost:4000"
                 }
             },
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "chain": "polygon",
@@ -82,7 +82,7 @@
             "depends_on": [
                 "ethereum"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         }
     ],
     "offChainActors": [
@@ -254,7 +254,7 @@
                 "signerRelayer",
                 "relayerCache"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "sequencerPublisher",
@@ -271,7 +271,7 @@
                 "signerSequencer",
                 "messageQueue"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "sequencerSubscriber",
@@ -288,7 +288,7 @@
                 "signerSequencer",
                 "messageQueue"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "cartographerDatabase",
@@ -331,7 +331,7 @@
                 "DATABASE_URL": "postgres://postgres:qwerty@$cartographerDatabase_hburl:5432/connext?sslmode=disable",
                 "CARTOGRAPHER_CONFIG": "{\"logLevel\": \"debug\",\"chains\": {\"1337\": { \"providers\": [\"http://$ethereum_hburl\"] },\"1338\": { \"providers\": [\"http://$polygon_hburl\"] }},\"environment\": \"production\"}"
             },
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "cartographerRouters",
@@ -346,7 +346,7 @@
                 "DATABASE_URL": "postgres://postgres:qwerty@$cartographerDatabase_hburl:5432/connext?sslmode=disable",
                 "CARTOGRAPHER_CONFIG": "{\"logLevel\": \"debug\",\"chains\": {\"1337\": { \"providers\": [\"http://$ethereum_hburl\"] },\"1338\": { \"providers\": [\"http://$polygon_hburl\"] }},\"environment\": \"production\"}"
             },
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "routerPublisher",
@@ -364,7 +364,7 @@
                 "signerRouter",
                 "routerCache"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "routerSubscriber",
@@ -382,7 +382,7 @@
                 "signerRouter",
                 "routerCache"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         },
         {
             "name": "routerExecutor",
@@ -400,7 +400,7 @@
                 "signerRouter",
                 "routerCache"
             ],
-            "tag": "v1"
+            "tag": "$tag_default"
         }
     ]
 }
