@@ -68,7 +68,7 @@ jobs:
         run: yarn workspaces focus @connext/nxtp-contracts && yarn workspace @connext/nxtp-contracts build
 
       - name: Build and Run Testnet
-        run: /root/go/bin/harbor apply ${{ needs.init.outputs.short-sha }} --placeholder-map sha_default=14fd507,tag_default=${{ needs.init.outputs.short-sha }} --no-wait true 
+        run: /root/go/bin/harbor apply ${{ needs.init.outputs.short-sha }} --placeholder-map sha_default=sha-14fd507,tag_default=${{ needs.init.outputs.short-sha }} --no-wait true 
 
       - name: yarn && yarn build:all
         run: |
