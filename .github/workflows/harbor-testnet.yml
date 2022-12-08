@@ -40,7 +40,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-0b67623110b3fd813
+          ec2-image-id: ami-0b4f24dd2196b7a07
           ec2-instance-type: c5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
