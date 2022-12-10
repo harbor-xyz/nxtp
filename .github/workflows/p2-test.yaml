@@ -40,10 +40,11 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-02bb53989f7c89b73
-          ec2-instance-type: m5.large
+          ec2-image-id: ami-047a05f92a0afc920
+          ec2-instance-type: m5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
+          runner-home-dir: /mnt/ramdisk
 
   bring-testnet-up:
     name: Build the testnet on the runner
