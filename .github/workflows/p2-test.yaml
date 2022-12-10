@@ -40,7 +40,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-03194f981bb6a30cf
+          ec2-image-id: ami-02bb53989f7c89b73
           ec2-instance-type: m5.large
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
@@ -51,15 +51,10 @@ jobs:
     runs-on: ${{ needs.init.outputs.label }} # run the job on the newly created runner
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Setup Nodejs and npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18"
+          ref: main
 
       - name: Configure Harbor
         run: /root/go/bin/harbor configure keys --user-key ${{ secrets.HARBOR_USER_KEY }} --project-key ${{ secrets.HARBOR_PROJECT_KEY }}
