@@ -40,8 +40,8 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-0527ac52fbd321989
-          ec2-instance-type: c5.xlarge
+          ec2-image-id: ami-0d5bf86e187efa8ae
+          ec2-instance-type: c5.2xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
 
@@ -68,11 +68,11 @@ jobs:
         run: yarn workspaces focus @connext/nxtp-contracts && yarn workspace @connext/nxtp-contracts build
 
       - name: Build and Run Testnet
-        run: /root/go/bin/harbor apply test-speed-run-3 --placeholder-map sha_default=sha-14fd507,tag_default=${{ needs.init.outputs.short-sha }} --no-wait true 
+        run: /root/go/bin/harbor apply test-speed-run-4 --placeholder-map sha_default=sha-14fd507,tag_default=${{ needs.init.outputs.short-sha }} --no-wait true 
 
       - name: yarn && yarn build:all
         run: |
-          export NODE_OPTIONS="--max-old-space-size=2046" 
+          export NODE_OPTIONS="--max-old-space-size=6144" 
           yarn && yarn build:all
 
       - name: Poll until testnet running
