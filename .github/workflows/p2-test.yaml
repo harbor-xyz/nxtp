@@ -1,11 +1,16 @@
-name: Harbor Testnet
+name: Harbor Testnet P2 Test
 
 on:
-  workflow_run:
-    workflows:
-      - E2E Workflow for Connext
-    types:
-      - completed
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      testnet_name:
+        # Description to be shown in the UI instead of 'testnet_name'
+        description: 'Testnet Name'
+        # Default value if no value is explicitly provided
+        default: 'default-testnet'
+        # Input has to be provided for the workflow to run
+        required: true
 
 jobs:
   init:
