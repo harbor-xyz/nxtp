@@ -41,7 +41,7 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
           ec2-image-id: ami-0fc3d89b85c84ade1
-          ec2-instance-type: c5.xlarge
+          ec2-instance-type: c5.2xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
 
@@ -114,7 +114,7 @@ jobs:
       - init # required to get output from the start-runner job
       - bring-testnet-up # required to wait when the main job is done
     runs-on: ubuntu-latest
-    if: needs.init.result == 'success'
+    if: always()
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
