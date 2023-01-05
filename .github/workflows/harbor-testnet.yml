@@ -40,8 +40,8 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-0fc3d89b85c84ade1
-          ec2-instance-type: c5.2xlarge
+          ec2-image-id: ami-0fda4109e340f383d
+          ec2-instance-type: m5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
 
@@ -72,7 +72,7 @@ jobs:
 
       - name: yarn && yarn build:all
         run: |
-          export NODE_OPTIONS="--max-old-space-size=6144" 
+          export NODE_OPTIONS="--max-old-space-size=4096" 
           yarn && yarn build:all
 
       - name: Poll until testnet running
