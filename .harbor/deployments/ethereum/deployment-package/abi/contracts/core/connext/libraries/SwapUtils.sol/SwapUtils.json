@@ -1,0 +1,9 @@
+[
+  "event AddLiquidity(bytes32 indexed,address indexed,uint256[],uint256[],uint256,uint256)",
+  "event NewAdminFee(bytes32 indexed,uint256)",
+  "event NewSwapFee(bytes32 indexed,uint256)",
+  "event RemoveLiquidity(bytes32 indexed,address indexed,uint256[],uint256)",
+  "event RemoveLiquidityImbalance(bytes32 indexed,address indexed,uint256[],uint256[],uint256,uint256)",
+  "event RemoveLiquidityOne(bytes32 indexed,address indexed,uint256,uint256,uint256,uint256)",
+  "event TokenSwap(bytes32 indexed,address indexed,uint256,uint256,uint128,uint128)"
+]

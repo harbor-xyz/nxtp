@@ -1,0 +1,4 @@
+[
+  "function aggregate(uint32,bytes32)",
+  "function propagate(address[],uint256[],bytes[]) payable"
+]
