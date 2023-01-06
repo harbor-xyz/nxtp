@@ -80,7 +80,7 @@ jobs:
       - name: Describe testnet
         id: testnet-data
         run: |
-          TDATA=$( /root/go/bin/harbor describe testnet --name ${{ needs.init.outputs.short-sha }} --output json | sed '1d' )
+          TDATA=$( /root/go/bin/harbor describe testnet --name ${{ needs.init.outputs.short-sha }} --output json )
           TDATA="${TDATA//'%'/''}"
           TDATA="${TDATA//$'\n'/''}"
           TDATA="${TDATA//$'\r'/''}"
