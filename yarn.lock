@@ -2185,6 +2185,7 @@ __metadata:
     "@connext/nxtp-sequencer": "workspace:*"
     "@connext/nxtp-txservice": "workspace:*"
     "@connext/nxtp-utils": "workspace:*"
+    "@harbor-xyz/harbor": ^0.4.1
     "@types/chai": 4.3.3
     "@types/chai-as-promised": 7.1.5
     "@types/chai-subset": 1.3.3
@@ -2197,6 +2198,7 @@ __metadata:
     chai-subset: 1.6.0
     eslint: 8.26.0
     ethers: 5.7.2
+    git-last-commit: ^1.0.1
     mocha: 10.1.0
     nyc: 15.1.0
     p-queue: 6.6.2
@@ -5387,6 +5389,26 @@ __metadata:
     "@repeaterjs/repeater": ^3.0.4
     tslib: ^2.3.1
   checksum: fc194c3e7f8ed00447c53ead4b2ac72948a53052866464e531b09880b2a017bd303e5171134848a5bed8c11a841b9817685bf6b445b4c0e622305a090d0a014e
+  languageName: node
+  linkType: hard
+
+"@harbor-xyz/harbor-cli@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@harbor-xyz/harbor-cli@npm:0.4.0"
+  dependencies:
+    mkdirp: ^1.0.4
+  checksum: 4d79c201c1248e725a5fbade7d1c741ac298b9d9c8532870a98f002179a3b88dc77715a608050cae001bd03cf594d8db082df67c538d7781990e484375c9b1c4
+  languageName: node
+  linkType: hard
+
+"@harbor-xyz/harbor@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@harbor-xyz/harbor@npm:0.4.1"
+  dependencies:
+    "@harbor-xyz/harbor-cli": ^0.4.0
+    isomorphic-unfetch: ^3.1.0
+    project-bin-path: ^2.0.0
+  checksum: d3ff7fcb01733c82ca76bfa0e7932c5d61d158de1afd6be829bbe164f5262c6f91fcd4cf3efde271280c95eca2b805f14247fbbe633e533e6772abe4117c5714
   languageName: node
   linkType: hard
 
@@ -11329,7 +11351,7 @@ __metadata:
   dependencies:
     inherits: ^2.0.3
     readable-stream: ^3.0.2
-  checksum: 1cef636e7061f310088706b34fe774e3960dff60a5039158b5e5c84795f6dd8a3411659324280405b8c5f1d7e8e3d4f68fa48e55963ed14953a44fef66423329
+  checksum: cae463db86ffa444ad60051a4a6c17e3f3d289fd169a87cbf1a6ee9d4118aafb976bb4713943359dba9c8211e2250f507bc4d50659b383e6b4e8dc1f0320e548
   languageName: node
   linkType: hard
 
@@ -13664,7 +13686,7 @@ __metadata:
   dependencies:
     bn.js: ^4.11.8
     ethereumjs-util: ^6.0.0
-  checksum: ae074be0bb012857ab5d3ae644d1163b908a48dd724b7d2567cfde309dc72222d460438f2411936a70dc949dc604ce1ef7118f7273bd525815579143c907e336
+  checksum: 03127d09960e5f8a44167463faf25b2894db2f746376dbb8195b789ed11762f93db9c574eaa7c498c400063508e9dfc1c80de2edf5f0e1406b25c87d860ff2f1
   languageName: node
   linkType: hard
 
@@ -15404,6 +15426,13 @@ __metadata:
   bin:
     testrpc-sc: ./index.js
   checksum: 3f86326d32f5e96c9356381837edde7dd0f23dcb7223aa73e02816256b84703cb76ce922987054a05b65963326088e99a4aa142d4b467ddda7c28547ed915d6d
+  languageName: node
+  linkType: hard
+
+"git-last-commit@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "git-last-commit@npm:1.0.1"
+  checksum: 44049215f0838c0d17edd25b44e08793d270ea96d95e56767ae9564eda2f41cf4a63b4bc418d62c2f3a8f6a483d6e12229c316daa4276dc0fef8ad663145af6c
   languageName: node
   linkType: hard
 
@@ -17729,6 +17758,16 @@ __metadata:
     node-fetch: ^2.6.1
     whatwg-fetch: ^3.4.1
   checksum: e5ab79a56ce5af6ddd21265f59312ad9a4bc5a72cebc98b54797b42cb30441d5c5f8d17c5cd84a99e18101c8af6f90c081ecb8d12fd79e332be1778d58486d75
+  languageName: node
+  linkType: hard
+
+"isomorphic-unfetch@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "isomorphic-unfetch@npm:3.1.0"
+  dependencies:
+    node-fetch: ^2.6.1
+    unfetch: ^4.2.0
+  checksum: 82b92fe4ec2823a81ab0fc0d11bd94d710e6f9a940d56b3cba31896d4345ec9ffc7949f4ff31ebcae84f6b95f7ebf3474c4c7452b834eb4078ea3f2c37e459c5
   languageName: node
   linkType: hard
 
@@ -20594,7 +20633,7 @@ __metadata:
     through2: ^3.0.0
   bin:
     ndjson: cli.js
-  checksum: dbcf1e361e216c7f8c2bad796f23087966b75429e929890ae1e3f57f00a5df2cabed89c4d55d067934ed4e4c9ed3ac5991ed44d2e08cfc4bc9e50ae2c5b66dce
+  checksum: ae2646e9365d859eec9d96439856011f43b3cc9b8f12cab3c84c6097c89988ddeb2811dbdfcf2767888d976b9e681e0c0a6172cf0bed662b606d3d17d09d32d2
   languageName: node
   linkType: hard
 
@@ -22535,6 +22574,15 @@ __metadata:
   version: 2.0.3
   resolution: "progress@npm:2.0.3"
   checksum: f67403fe7b34912148d9252cb7481266a354bd99ce82c835f79070643bb3c6583d10dbcfda4d41e04bbc1d8437e9af0fb1e1f2135727878f5308682a579429b7
+  languageName: node
+  linkType: hard
+
+"project-bin-path@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "project-bin-path@npm:2.0.0"
+  dependencies:
+    find-up: ^2.1.0
+  checksum: 44662bff23b7389db9480d50540f9621c6bda7ce184cdc81837414c05f51bf6feb511e747a3c7bfed56b9f0f25cf3868ab3e800aa660fd692803152105f17cfa
   languageName: node
   linkType: hard
 
@@ -26849,6 +26897,13 @@ __metadata:
   dependencies:
     busboy: ^1.6.0
   checksum: 7a076e44d84b25844b4eb657034437b8b9bb91f17d347de474fdea1d4263ce7ae9406db79cd30de5642519277b4893f43073258bcc8fed420b295da3fdd11b26
+  languageName: node
+  linkType: hard
+
+"unfetch@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "unfetch@npm:4.2.0"
+  checksum: 6a4b2557e1d921eaa80c4425ce27a404945ec26491ed06e62598f333996a91a44c7908cb26dc7c2746d735762b13276cf4aa41829b4c8f438dde63add3045d7a
   languageName: node
   linkType: hard
 
