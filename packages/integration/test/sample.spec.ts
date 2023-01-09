@@ -3,8 +3,8 @@ import { expect } from "chai";
 import { getLastCommit } from 'git-last-commit';
 
 const harbor = new Harbor({
-  userKey: "9S7NYNRjgy6Xaw5eSdaGqg",
-  projectKey: "sJHqS5q4B2jb6TwDP6pHm5"
+  userKey: "66t1DdSLuFnoAuVccZEkoN",
+  projectKey: "xkfSjdSLuFnoAuVccX7j22"
 });
 
 export default function getTestnetName(){
@@ -25,11 +25,12 @@ describe('sample', function() {
     let result = 7;
     expect(result).to.equal(7);
     let testnetName = await getTestnetName();
-    console.log(testnetName);
     await harbor.authenticate();
     console.log("\n\n==========testnet==========");
-    const testnet = await harbor.testnet("testnet-6102");
-    console.log(testnet);
+    if (typeof testnetName === 'string') {
+      const testnet = await harbor.testnet(testnetName);
+      console.log(testnet);
+    }
   });
 });
 
