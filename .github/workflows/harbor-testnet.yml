@@ -109,9 +109,9 @@ jobs:
           CARTOGRAPHER_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.cartographerApi.endpoints[0]}}"
           DOMAIN_1337_URL="${{fromJson(steps.testnet-data.outputs.TDATA).chains.ethereum.endpoint}}"
           DOMAIN_1338_URL="${{fromJson(steps.testnet-data.outputs.TDATA).chains.polygon.endpoint}}"
-          sed 's,CARTOGRAPHER_API_URL,${{ CARTOGRAPHER_URL }},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
-          sed 's,DOMAIN_1337_URL,${{ DOMAIN_1337_URL }},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
-          sed 's,DOMAIN_1338_URL,${{ DOMAIN_1338_URL }},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
+          sed 's,CARTOGRAPHER_API_URL,${CARTOGRAPHER_URL%%:*},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
+          sed 's,DOMAIN_1337_URL,${DOMAIN_1337_URL%%:*},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
+          sed 's,DOMAIN_1338_URL,${DOMAIN_1338_URL%%:*},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
           cat packages/integration/test/constants/local/index.ts
 
       - name: Run Tests
