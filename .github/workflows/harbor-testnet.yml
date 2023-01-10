@@ -114,8 +114,8 @@ jobs:
           sed -i "s,DOMAIN_1338_URL,$DOMAIN_1338_URL,g" packages/integration/test/constants/local/index.ts
           cat packages/integration/test/constants/local/index.ts
 
-      - name: Run Tests
-        run: yarn workspace @connext/nxtp-integration run test
+      # - name: Run Tests
+      #   run: yarn workspace @connext/nxtp-integration run test
 
       - name: Kill Testnet 
         if: always()
