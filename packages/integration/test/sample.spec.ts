@@ -41,7 +41,7 @@ describe('Harbor Test E2E', function () {
     console.log("\n\n==========testnet==========");
     console.log(testnet);
 
-    expect(testnet.status).to.equal("STOPP");
+    expect(testnet.status).to.equal("RUNNING");
   });
 
   it("Checks if the Chains exists", async () => {
@@ -69,12 +69,13 @@ describe('Harbor Test E2E', function () {
     const offChainActors = await testnet.offChainActors();
     console.log(`\n\n==========offChainActors(${offChainActors.length})==========`);
     console.log(offChainActors)
-    offChainActors.forEach(async (actor) => {
+    offChainActors.forEach((actor) => {
       expect(actor.status).to.equal("RUNNING");
       console.log(`${actor.name} - ${actor.status} - ${actor.ports()} - ${actor.endpoint}`);
-      const logs = await actor.logs();
       console.log(`\n\n==========logs for actor ${actor.name}==========`);
-      console.log(logs);
+      actor.logs().then((logs) => {
+        console.log(logs);
+      });
     });
 
   });
