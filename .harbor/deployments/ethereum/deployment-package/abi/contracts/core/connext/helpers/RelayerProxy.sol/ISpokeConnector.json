@@ -1,4 +1,0 @@
-[
-  "function proveAndProcess(tuple(bytes,bytes32[32],uint256)[],bytes32,bytes32[32],uint256)",
-  "function send(bytes) payable"
-]
