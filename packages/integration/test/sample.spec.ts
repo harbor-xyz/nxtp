@@ -49,15 +49,13 @@ describe('Harbor Test E2E', function () {
     console.log(`\n\n==========chains(${chains.length})==========`);
 
     chains.forEach((chain) => {
-      // console.log(chain)
+      console.log(chain)
       expect(chain.status).to.equal("RUNNING");
       console.log(`${chain.chain} - ${chain.id} - ${chain.status} - ${chain.endpoint}`);
-      chain.accounts().then((accounts) => {
-        console.log(`\n\n==========accounts==========`);
-        accounts.forEach((account, idx) => {
-          // console.log(account)
-          console.log(`=========${chain.chain}-account-#${idx + 1}/${accounts.length}==========`);
-          console.log(`${account.address}  - ${account.type} - ${JSON.stringify(account.balances)} - ${JSON.stringify(account.abi)}`);
+      chain.logs().then((logs) => {
+        console.log(`\n\n==========chain logs==========`);
+        logs.forEach((log) => {
+          console.log(log);
         });
       }).catch((err) => {
         console.error(err);
@@ -72,9 +70,11 @@ describe('Harbor Test E2E', function () {
     offChainActors.forEach((actor) => {
       expect(actor.status).to.equal("RUNNING");
       console.log(`${actor.name} - ${actor.status} - ${actor.ports()} - ${actor.endpoint}`);
-      console.log(`\n\n==========logs for actor ${actor.name}==========`);
       actor.logs().then((logs) => {
-        console.log(logs);
+        console.log(`\n\n==========logs for actor ${actor.name}==========`);
+        logs.forEach((log) => {
+          console.log(log);
+        });
       });
     });
 
