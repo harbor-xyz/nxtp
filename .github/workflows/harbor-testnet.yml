@@ -40,7 +40,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-06c1ab753d08cf228
+          ec2-image-id: ami-04e87d16ce74420aa
           ec2-instance-type: m5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
@@ -109,9 +109,9 @@ jobs:
           CARTOGRAPHER_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.cartographerApi.endpoints[0]}}"
           DOMAIN_1337_URL="${{fromJson(steps.testnet-data.outputs.TDATA).chains.ethereum.endpoint}}"
           DOMAIN_1338_URL="${{fromJson(steps.testnet-data.outputs.TDATA).chains.polygon.endpoint}}"
-          sed 's,CARTOGRAPHER_API_URL,${CARTOGRAPHER_URL%%:*},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
-          sed 's,DOMAIN_1337_URL,${DOMAIN_1337_URL%%:*},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
-          sed 's,DOMAIN_1338_URL,${DOMAIN_1338_URL%%:*},g' packages/integration/test/constants/local/index.ts | tee packages/integration/test/constants/local/index.ts
+          sed -i "s,CARTOGRAPHER_API_URL,$CARTOGRAPHER_URL,g" packages/integration/test/constants/local/index.ts
+          sed -i "s,DOMAIN_1337_URL,$DOMAIN_1337_URL,g" packages/integration/test/constants/local/index.ts
+          sed -i "s,DOMAIN_1338_URL,$DOMAIN_1338_URL,g" packages/integration/test/constants/local/index.ts
           cat packages/integration/test/constants/local/index.ts
 
       - name: Run Tests
