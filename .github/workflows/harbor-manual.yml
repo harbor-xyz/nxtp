@@ -1,32 +1,25 @@
-name: Harbor Testnet
+name: Harbor Testnet - Manual Workflow
 
 on:
-  workflow_run:
-    workflows:
-      - E2E Workflow for Connext
-    types:
-      - completed
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      testnet_name:
+        # Description to be shown in the UI instead of 'testnet_name'
+        description: 'Testnet Name'
+        # Default value if no value is explicitly provided
+        default: 'default-testnet'
+        # Input has to be provided for the workflow to run
+        required: true
 
 jobs:
   init:
     name: Initial steps for harbor
-    if: github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     outputs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
-      short-sha: ${{ steps.commit.outputs.short }}
     steps:
-      - name: Get Commit value
-        id: commit
-        uses: pr-mpt/actions-commit-hash@v2
-        with:
-          commit: "${{ github.event.workflow_run.head_sha }}"
-          prefix: "sha-"
-      
-      - name: Echo tag name (sha-short)
-        run: echo ${{ steps.commit.outputs.short }}
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -40,7 +33,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_REGISTRATION_TOKEN }}
-          ec2-image-id: ami-0b43930d2d41e0561
+          ec2-image-id: ami-04e87d16ce74420aa
           ec2-instance-type: m5.xlarge
           subnet-id: subnet-0ff82089478a04bd1
           security-group-id: sg-0a2341bf0d00efdee
@@ -62,13 +55,13 @@ jobs:
           node-version: "18"
 
       - name: Configure Harbor
-        run: /root/go/bin/harbor configure keys --user-key ${{ secrets.HARBOR_USER_KEY }} --project-key ${{ secrets.HARBOR_PROJECT_KEY }}
+        run: /root/go/bin/harbor configure keys --user-key 1oUHxyc6swHiYhfepyUejQ --project-key rSoRCcrAXgic4YjK6SbwaZ
 
       - name: Compile code and other dependencies
         run: yarn workspaces focus @connext/nxtp-contracts && yarn workspace @connext/nxtp-contracts build
 
       - name: Build and Run Testnet
-        run: /root/go/bin/harbor apply ${{ needs.init.outputs.short-sha }} --placeholder-map sha_default=sha-82df126,tag_default=${{ needs.init.outputs.short-sha }} --no-wait true
+        run: /root/go/bin/harbor apply ${{ github.event.inputs.testnet_name }} --placeholder-map sha_default=sha-82df126,tag_default=sha-82df126 --no-wait true
 
       - name: yarn && yarn build:all
         run: |
@@ -76,12 +69,12 @@ jobs:
           yarn && yarn build:all
 
       - name: Poll until testnet running
-        run: sh /root/describe.sh ${{ needs.init.outputs.short-sha }}
+        run: sh /root/describe.sh ${{ github.event.inputs.testnet_name }}
 
       - name: Describe testnet
         id: testnet-data
         run: |
-          TDATA=$( /root/go/bin/harbor describe testnet --name ${{ needs.init.outputs.short-sha }} --output json )
+          TDATA=$( /root/go/bin/harbor describe testnet --name ${{ github.event.inputs.testnet_name }} --output json )
           TDATA="${TDATA//'%'/''}"
           TDATA="${TDATA//$'\n'/''}"
           TDATA="${TDATA//$'\r'/''}"
@@ -101,15 +94,25 @@ jobs:
           GRAPH_URL_1338="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.graphNode1338.endpoints[0]}}"
           IPFS_URL="${IPFS_URL%%:*}" GRAPH_URL_1337="${GRAPH_URL_1337%%:*}" GRAPH_URL_1338="${GRAPH_URL_1338%%:*}" sh setup_subgraph.sh
       
-      - name: Run Harbor Tests
-        run:  yarn workspace @connext/nxtp-integration run test:sample
+      # - name: Run Harbor Tests
+      #   run:  yarn workspace @connext/nxtp-integration run test:sample
 
-      - name: Run Tests
-        run: yarn workspace @connext/nxtp-integration run test:harbor
+      - name: Replace Endpoints for testing against testnet 
+        run: |
+          CARTOGRAPHER_URL="${{fromJson(steps.testnet-data.outputs.TDATA).offChainActors.cartographerApi.endpoints[0]}}"
+          DOMAIN_1337_URL="${{fromJson(steps.testnet-data.outputs.TDATA).chains.ethereum.endpoint}}"
+          DOMAIN_1338_URL="${{fromJson(steps.testnet-data.outputs.TDATA).chains.polygon.endpoint}}"
+          sed -i "s,localhost:3000,$CARTOGRAPHER_URL,g" packages/integration/test/constants/local/index.ts
+          sed -i "s,http://localhost:8547,$DOMAIN_1337_URL,g" packages/integration/test/constants/local/index.ts
+          sed -i "s,http://localhost:8546,$DOMAIN_1338_URL,g" packages/integration/test/constants/local/index.ts
+          cat packages/integration/test/constants/local/index.ts
 
-      - name: Kill Testnet 
-        if: always()
-        run: /root/go/bin/harbor kill testnet --name ${{ needs.init.outputs.short-sha }} --no-wait true
+      # - name: Run Tests
+      #   run: yarn workspace @connext/nxtp-integration run test
+
+      # - name: Kill Testnet 
+      #  if: always()
+      #  run: /root/go/bin/harbor kill testnet --name ${{ github.event.inputs.testnet_name }} --no-wait true
 
   stop-runner:
     name: Stop self-hosted EC2 runner
