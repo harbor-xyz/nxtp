@@ -26,7 +26,7 @@ export const USER_WALLET = Wallet.fromMnemonic(
   "define various win open delay annual edge wait embark fire brain novel",
 );
 
-export const ORIG_PARAMETERS = {
+export const PARAMETERS = {
   ENVIRONMENT: "production",
   AGENTS: {
     ROUTER: {
@@ -65,7 +65,7 @@ export const ORIG_PARAMETERS = {
 export async function getParams() {
   let testnet: Testnet;
   let testnetName = await getTestnetName();
-  let params = ORIG_PARAMETERS;
+  let params = PARAMETERS;
   const harbor = new Harbor({
     userKey: "66t1DdSLuFnoAuVccZEkoN",
     projectKey: "xkfSjdSLuFnoAuVccX7j22"
@@ -91,8 +91,3 @@ export async function getParams() {
   }
   return params;
 };
-
-export let PARAMETERS = ORIG_PARAMETERS;
-getParams().then((params) => {
-  PARAMETERS = params;
-});
