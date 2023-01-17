@@ -4,6 +4,7 @@ import {
 } from "@connext/nxtp-utils";
 import { TransactionService, getConnextInterface } from "@connext/nxtp-txservice";
 import { NxtpSdkBase, NxtpSdkUtils } from "@connext/nxtp-sdk";
+import { setupRouter, setupAsset, addLiquidity, addRelayer } from "./helpers/local";
 import { BigNumber, constants, Contract, ContractInterface, providers, utils, Wallet } from "ethers";
 import { expect } from "chai";
 /**
@@ -31,6 +32,41 @@ type Deployments = {
   TestERC20: string;
 };
 
+const getParameters = async () => {
+  let _params = await getParams();
+const PARAMS = {
+  ..._params,
+  A: {
+    ..._params.A,
+    DEPLOYMENTS: getDeployments(_params.A.CHAIN),
+  },
+  B: {
+    ..._params.B,
+    DEPLOYMENTS: getDeployments(_params.B.CHAIN),
+  },
+} as const;
+  return PARAMS;
+}
+
+const deployerTxServiceFn = async() => {
+  const PARAMS = await getParameters();
+  return new TransactionService(
+  logger,
+  {
+    [PARAMS.A.DOMAIN]: {
+      providers: PARAMS.A.RPC,
+      confirmations: 1,
+    },
+    [PARAMS.B.DOMAIN]: {
+      providers: PARAMS.B.RPC,
+      confirmations: 1,
+    },
+  },
+  DEPLOYER_WALLET,
+  true,
+);
+}
+
 /**
  * Get deployments needed for E2E test for the specified chain.
  * @param _chain - Local chain for which we are getting deployment addresses.
@@ -56,23 +92,159 @@ export const getDeployments = (_chain: string | number): Deployments => {
   return result;
 };
 
+const onchainSetup = async (sdkBase: NxtpSdkBase) => {
+  // TODO: Mirror connectors set up for messaging
+  // TODO: Allowlist messaging routers as callers of dispatch?
+  // TODO: Approve relayers as caller for connectors and root manager?
+  const PARAMETERS = await getParameters();
+  const deployerTxService = await deployerTxServiceFn();
+
+  logger.info("Setting up router...");
+  await setupRouter(
+    PARAMETERS.AGENTS.ROUTER.address,
+    [
+      { Connext: PARAMETERS.A.DEPLOYMENTS.Connext, domain: PARAMETERS.A.DOMAIN },
+      { Connext: PARAMETERS.B.DEPLOYMENTS.Connext, domain: PARAMETERS.B.DOMAIN },
+    ],
+    deployerTxService,
+  );
+  logger.info("Set up router.");
+
+  logger.info("Setting up assets...");
+  await setupAsset(
+    { domain: PARAMETERS.A.DOMAIN, tokenAddress: PARAMETERS.A.DEPLOYMENTS.TestERC20 },
+    [
+      {
+        domain: PARAMETERS.A.DOMAIN,
+        Connext: PARAMETERS.A.DEPLOYMENTS.Connext,
+        // NOTE: Same as local; this means we won't be doing any swaps.
+        adopted: constants.AddressZero,
+        local: PARAMETERS.A.DEPLOYMENTS.TestERC20,
+      },
+      {
+        domain: PARAMETERS.B.DOMAIN,
+        Connext: PARAMETERS.B.DEPLOYMENTS.Connext,
+        // NOTE: Same as local; this means we won't be doing any swaps.
+        adopted: constants.AddressZero,
+        local: PARAMETERS.B.DEPLOYMENTS.TestERC20,
+      },
+    ],
+    deployerTxService,
+    logger,
+  );
+  logger.info("Set up assets.");
+
+  logger.info(`Adding liquidity for router: ${PARAMETERS.AGENTS.ROUTER.address}...`);
+  await addLiquidity(
+    [
+      {
+        domain: PARAMETERS.A.DOMAIN,
+        amount: utils.parseEther("100").toString(),
+        router: PARAMETERS.AGENTS.ROUTER.address,
+        asset: PARAMETERS.A.DEPLOYMENTS.TestERC20,
+        Connext: PARAMETERS.A.DEPLOYMENTS.Connext,
+      },
+      {
+        domain: PARAMETERS.B.DOMAIN,
+        amount: utils.parseEther("100").toString(),
+        router: PARAMETERS.AGENTS.ROUTER.address,
+        asset: PARAMETERS.B.DEPLOYMENTS.TestERC20,
+        Connext: PARAMETERS.B.DEPLOYMENTS.Connext,
+      },
+    ],
+    deployerTxService,
+    logger,
+  );
+  logger.info("Added liquidity.");
+
+  logger.info(`Adding a relayer: ${PARAMETERS.AGENTS.RELAYER.address}`);
+  await addRelayer(
+    [
+      {
+        domain: PARAMETERS.A.DOMAIN,
+        relayer: PARAMETERS.AGENTS.RELAYER.address,
+        Connext: PARAMETERS.A.DEPLOYMENTS.Connext,
+      },
+      {
+        domain: PARAMETERS.B.DOMAIN,
+        relayer: PARAMETERS.AGENTS.RELAYER.address,
+        Connext: PARAMETERS.B.DEPLOYMENTS.Connext,
+      },
+    ],
+    deployerTxService,
+    logger,
+  );
+
+  // logger.info(`Adding a sequencer: ${PARAMETERS.AGENTS.SEQUENCER.address}`);
+  // await addSequencer(
+  //   [
+  //     {
+  //       domain: PARAMETERS.A.DOMAIN,
+  //       sequencer: PARAMETERS.AGENTS.SEQUENCER.address,
+  //       Connext: PARAMETERS.A.DEPLOYMENTS.Connext,
+  //     },
+  //     {
+  //       domain: PARAMETERS.B.DOMAIN,
+  //       sequencer: PARAMETERS.AGENTS.SEQUENCER.address,
+  //       Connext: PARAMETERS.B.DEPLOYMENTS.Connext,
+  //     },
+  //   ],
+  //   deployerTxService,
+  //   logger,
+  // );
+
+  // // TODO: Read user's balance and skip if they already have TEST tokens.
+  // logger.info("Minting tokens for user agent...");
+  // {
+  //   const erc20 = new utils.Interface(ERC20Abi);
+  //   const amount = BigNumber.from("1000000000000000");
+  //   const encoded = erc20.encodeFunctionData("mint", [PARAMETERS.AGENTS.USER.address, amount]);
+  //   const receipt = await deployerTxService.sendTx(
+  //     {
+  //       chainId: 1337,
+  //       to: PARAMETERS.A.DEPLOYMENTS.TestERC20,
+  //       data: encoded,
+  //       value: BigNumber.from("0"),
+  //     },
+  //     requestContext,
+  //   );
+  //   logger.info("Minted tokens.", requestContext, methodContext, {
+  //     amount: amount.toString(),
+  //     asset: PARAMETERS.A.DEPLOYMENTS.TestERC20,
+  //     txHash: receipt.transactionHash,
+  //   });
+
+  //   const balanceOfData = erc20.encodeFunctionData("balanceOf", [PARAMETERS.AGENTS.USER.address]);
+  //   const res = await deployerTxService.readTx({
+  //     chainId: PARAMETERS.A.CHAIN,
+  //     data: balanceOfData,
+  //     to: PARAMETERS.A.DEPLOYMENTS.TestERC20,
+  //   });
+  //   const [tokenBalance] = erc20.decodeFunctionResult("balanceOf", res);
+  //   logger.info(`New user token balance: ${tokenBalance.toString()}`);
+  // }
+
+  // let tx = await sdkBase.approveIfNeeded(PARAMETERS.A.DOMAIN, PARAMETERS.A.DEPLOYMENTS.TestERC20, "1", true);
+  // if (tx) {
+  //   await userTxService.sendTx(
+  //     { chainId: PARAMETERS.A.CHAIN, to: tx.to!, value: 0, data: utils.hexlify(tx.data!) },
+  //     requestContext,
+  //   );
+  // }
+  // tx = await sdkBase.approveIfNeeded(PARAMETERS.B.DOMAIN, PARAMETERS.B.DEPLOYMENTS.TestERC20, "1", true);
+  // if (tx) {
+  //   await userTxService.sendTx(
+  //     { chainId: PARAMETERS.B.CHAIN, to: tx.to!, value: 0, data: utils.hexlify(tx.data!) },
+  //     requestContext,
+  //   );
+  // }
+};
+
 const { requestContext, methodContext } = createLoggingContext("e2e");
 describe("LOCAL:E2E", async () => {
   let sdkBase: NxtpSdkBase;
   let sdkUtils: NxtpSdkUtils;
-  let _params = await getParams();
-  const PARAMS = {
-    ..._params,
-    A: {
-      ..._params.A,
-      DEPLOYMENTS: getDeployments(_params.A.CHAIN),
-    },
-    B: {
-      ..._params.B,
-      DEPLOYMENTS: getDeployments(_params.B.CHAIN),
-    },
-  } as const;
-
+  const PARAMS = await getParameters();
 
   before(async () => {
     const originProvider = new providers.JsonRpcProvider(PARAMS.A.RPC[0]);
@@ -96,21 +268,7 @@ describe("LOCAL:E2E", async () => {
       const config = PARAMS[key as "A" | "B"];
       const { CHAIN: chain, DEPLOYMENTS: deployments } = config;
       for (const [deployment, address] of Object.entries(deployments)) {
-        const deployerTxService = new TransactionService(
-          logger,
-          {
-            [PARAMS.A.DOMAIN]: {
-              providers: PARAMS.A.RPC,
-              confirmations: 1,
-            },
-            [PARAMS.B.DOMAIN]: {
-              providers: PARAMS.B.RPC,
-              confirmations: 1,
-            },
-          },
-          DEPLOYER_WALLET,
-          true,
-        );
+        const deployerTxService = await deployerTxServiceFn();
         const code = await deployerTxService.getCode(chain, address);
         if (code === "0x") {
           throw new Error(`No contract found at given ${deployment} address: ${address} on chain ${chain}!`);
@@ -154,5 +312,6 @@ describe("LOCAL:E2E", async () => {
     logger.info("Set up sdk.");
 
     // On-chain / contracts configuration, approvals, etc.
+    await onchainSetup(sdkBase);
   });
 });
