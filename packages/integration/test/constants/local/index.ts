@@ -1,7 +1,7 @@
 import { Wallet } from "ethers";
-import Harbor from '@harbor-xyz/harbor';
-import { Testnet } from '@harbor-xyz/harbor/dist/harbor_sdk/types';
-import { getLastCommit } from 'git-last-commit';
+import Harbor from "@harbor-xyz/harbor";
+import { Testnet } from "@harbor-xyz/harbor/dist/harbor_sdk/types";
+import { getLastCommit } from "git-last-commit";
 
 export default function getTestnetName() {
   return new Promise((resolve, reject) => {
@@ -64,14 +64,14 @@ export const PARAMETERS = {
 
 export async function getParams() {
   let testnet: Testnet;
-  let testnetName = await getTestnetName();
-  let params = PARAMETERS;
+  const testnetName = await getTestnetName();
+  const params = PARAMETERS;
   const harbor = new Harbor({
     userKey: "66t1DdSLuFnoAuVccZEkoN",
     projectKey: "xkfSjdSLuFnoAuVccX7j22"
   });
   await harbor.authenticate();
-  if (typeof testnetName === 'string') {
+  if (typeof testnetName === "string") {
     testnet = await harbor.testnet(testnetName);
     const chains = testnet.chains();
     chains.forEach((chain) => { 
@@ -82,7 +82,7 @@ export async function getParams() {
         params.B.RPC = [chain.endpoint];
       }
     });
-    const offChainActors = await testnet.offChainActors();
+    const offChainActors = testnet.offChainActors();
     offChainActors.forEach((actor) => {
       if (actor.name == "cartographerApi") {
         params.AGENTS.CARTOGRAPHER.url = "http://" + actor.endpoint + ":" + actor.ports()[0];

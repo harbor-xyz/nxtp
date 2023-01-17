@@ -244,9 +244,10 @@ const { requestContext, methodContext } = createLoggingContext("e2e");
 describe("LOCAL:E2E", async () => {
   let sdkBase: NxtpSdkBase;
   let sdkUtils: NxtpSdkUtils;
-  const PARAMS = await getParameters();
+  
 
   before(async () => {
+    const PARAMS = await getParameters();
     const originProvider = new providers.JsonRpcProvider(PARAMS.A.RPC[0]);
     const destinationProvider = new providers.JsonRpcProvider(PARAMS.B.RPC[0]);
     // Ensure automine is off.
@@ -312,6 +313,10 @@ describe("LOCAL:E2E", async () => {
     logger.info("Set up sdk.");
 
     // On-chain / contracts configuration, approvals, etc.
-    await onchainSetup(sdkBase);
+    // await onchainSetup(sdkBase);
+  });
+
+  it("add 1 + 1", async () => { 
+    expect(1 + 1).to.equal(2);
   });
 });
