@@ -16,25 +16,23 @@ export default function getTestnetName() {
   });
 }
 
-describe('Harbor Test E2E', function () {
+describe("Harbor Test E2E", function () {
 
   let harbor: Harbor;
-  let testnetName;
+  let testnetName: unknown;
   let testnet: Testnet;
 
   before(async () => {
-    let testnetName = await getTestnetName();
+    testnetName = await getTestnetName();
 
     harbor = new Harbor({
       userKey: "66t1DdSLuFnoAuVccZEkoN",
       projectKey: "xkfSjdSLuFnoAuVccX7j22"
     });
     await harbor.authenticate();
-    if (typeof testnetName === 'string') {
+    if (typeof testnetName === "string") {
       testnet = await harbor.testnet(testnetName);
     }
-    console.log(testnetName);
-
   });
 
   it("Checks if the Testnet exists", async () => {
@@ -49,35 +47,62 @@ describe('Harbor Test E2E', function () {
     console.log(`\n\n==========chains(${chains.length})==========`);
 
     chains.forEach((chain) => {
-      console.log(chain)
+      console.log(chain);
       expect(chain.status).to.equal("RUNNING");
       console.log(`${chain.chain} - ${chain.id} - ${chain.status} - ${chain.endpoint}`);
-      chain.logs().then((logs) => {
-        console.log(`\n\n==========chain logs==========`);
-        logs.forEach((log) => {
-          console.log(log);
-        });
-      }).catch((err) => {
-        console.error(err);
-      });
-    })
+    });
   });
 
   it('Checks if the Offchain actors exists', async function () {
-    const offChainActors = await testnet.offChainActors();
+    const offChainActors = testnet.offChainActors();
     console.log(`\n\n==========offChainActors(${offChainActors.length})==========`);
-    console.log(offChainActors)
+    console.log(offChainActors);
     offChainActors.forEach((actor) => {
       expect(actor.status).to.equal("RUNNING");
       console.log(`${actor.name} - ${actor.status} - ${actor.ports()} - ${actor.endpoint}`);
-      actor.logs().then((logs) => {
-        console.log(`\n\n==========logs for actor ${actor.name}==========`);
-        logs.forEach((log) => {
-          console.log(log);
-        });
-      });
     });
+  });
 
+  it('Restart router-cache', async function () {
+    console.log("Stopping router-cache");
+    testnet = await harbor.stop(testnet.name, "routerCache");
+    let offChainActors = testnet.offChainActors();
+    for (const actor of offChainActors) {
+      if(actor.name == "routerCache") {
+        console.log(`${actor.name} - ${actor.status}`);
+        expect(actor.status).to.equal("STOPPED");
+      }
+    }
+    console.log("Starting router-cache");
+    testnet = await harbor.start(testnet.name, "routerCache");
+    offChainActors = testnet.offChainActors();
+    for (const actor of offChainActors) {
+      if(actor.name == "routerCache") {
+        console.log(`${actor.name} - ${actor.status} - ${actor.ports()} - ${actor.endpoint}`);
+        expect(actor.status).to.equal("RUNNING");
+      }
+    }
+  });
+
+  it("Assert and print sequencer-subscriber log", async function () {
+    if (typeof testnetName === "string") {
+    testnet = await harbor.testnet(testnetName);
+    const offChainActors = testnet.offChainActors();
+    let success = false;
+    for (const actor of offChainActors) {
+      if(actor.name == "sequencerSubscriber") {
+        await actor.logs().then((logs) => {
+          logs.forEach((log) => {
+            if(log.message.includes("Sequencer config generated.")) {
+              console.log(log);
+              success = true;
+            } 
+          });
+        });
+      }
+    }
+    expect(success).to.equal(true);
+  }
   });
 });
 
