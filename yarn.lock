@@ -2185,7 +2185,7 @@ __metadata:
     "@connext/nxtp-sequencer": "workspace:*"
     "@connext/nxtp-txservice": "workspace:*"
     "@connext/nxtp-utils": "workspace:*"
-    "@harbor-xyz/harbor": ^0.4.2
+    "@harbor-xyz/harbor": ^0.4.4
     "@types/chai": 4.3.3
     "@types/chai-as-promised": 7.1.5
     "@types/chai-subset": 1.3.3
@@ -5392,23 +5392,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@harbor-xyz/harbor-cli@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "@harbor-xyz/harbor-cli@npm:0.4.2"
+"@harbor-xyz/harbor-cli@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@harbor-xyz/harbor-cli@npm:0.4.4"
   dependencies:
     mkdirp: ^1.0.4
-  checksum: c4cd1f354767660f629c0bf4c2a13a474327ed226269b03c26507d088207c86ae21f690c7f0c216019b271db784ea4c3a753e1150f5690e3e8111862dbd80f10
+  checksum: b474fb5067e125a30e7e5645709c3a7f931e33aa5524d5f7d43df8e41fd2f7d4704ed7931e01677ca515d89af5d5c12b24b568b1d03add3055d6e7c5c4b95cea
   languageName: node
   linkType: hard
 
-"@harbor-xyz/harbor@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "@harbor-xyz/harbor@npm:0.4.2"
+"@harbor-xyz/harbor@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@harbor-xyz/harbor@npm:0.4.4"
   dependencies:
-    "@harbor-xyz/harbor-cli": ^0.4.2
+    "@harbor-xyz/harbor-cli": ^0.4.4
     isomorphic-unfetch: ^3.1.0
     project-bin-path: ^2.0.0
-  checksum: b3b6b13d04d25bd6513c5381b877b632e4918f8ffee7b8497784e017544a713bf763ee5497ba8213ee07ae545e05e66e4c9d91d51c2e1c40bfd5b9a2198321f1
+  checksum: fa9f3d9066e3b029373b8bc7b9390f7fe2e078ec8f838d3779697ee0db969b083d28dc2c66312d5fbf73fa8412b2e0e1a005ab582b1d8fb7da56ec80adfe5a93
   languageName: node
   linkType: hard
 
