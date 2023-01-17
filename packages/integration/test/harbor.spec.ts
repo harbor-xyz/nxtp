@@ -313,7 +313,7 @@ describe("LOCAL:E2E", async () => {
     logger.info("Set up sdk.");
 
     // On-chain / contracts configuration, approvals, etc.
-    // await onchainSetup(sdkBase);
+    await onchainSetup(sdkBase);
   });
 
   it("add 1 + 1", async () => { 
